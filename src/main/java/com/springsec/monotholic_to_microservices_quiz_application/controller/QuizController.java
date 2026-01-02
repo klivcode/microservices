@@ -1,11 +1,13 @@
 package com.springsec.monotholic_to_microservices_quiz_application.controller;
 
-import com.springsec.monotholic_to_microservices_quiz_application.entities.Questions;
+import com.springsec.monotholic_to_microservices_quiz_application.entities.QuestionWrapper;
+import com.springsec.monotholic_to_microservices_quiz_application.entities.Response;
 import com.springsec.monotholic_to_microservices_quiz_application.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -21,5 +23,19 @@ public class QuizController {
                                                @RequestParam String title)
     {
         return quizService.createQuiz(category,numQ,title);
+    }
+
+
+    @GetMapping("get/{id}")
+    public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(@PathVariable Integer id)
+    {
+        return quizService.getQuizQuestions(id);
+    }
+
+
+    @PostMapping("submit/{id}")
+    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id, @RequestBody List<Response> respnses)
+    {
+        return quizService.calculateResult(id,respnses);
     }
 }
