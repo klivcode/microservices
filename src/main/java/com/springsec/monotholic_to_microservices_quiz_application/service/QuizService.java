@@ -1,5 +1,6 @@
 package com.springsec.monotholic_to_microservices_quiz_application.service;
 
+import com.springsec.monotholic_to_microservices_quiz_application.entities.Response;
 import com.springsec.monotholic_to_microservices_quiz_application.dao.QuestionDao;
 import com.springsec.monotholic_to_microservices_quiz_application.dao.QuizDao;
 import com.springsec.monotholic_to_microservices_quiz_application.entities.QuestionWrapper;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,5 +48,19 @@ public class QuizService {
             questionsForUsers.add(qw);
         }
         return new ResponseEntity<>(questionsForUsers, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Integer> calculateResult(Integer id, List<Response> respnses) {
+        Optional<Quiz> quiz = quizDao.findById(id);
+        List<Questions> questionsFromDb = quiz.get().getQuestions();
+        int rightAnswer = 0;
+        int i=0;
+        for(Response r : respnses){
+            if(r.getResponse().equals(questionsFromDb.get(i).getRightAnswer())){
+                rightAnswer++;
+            }
+            i++;
+        }
+        return new ResponseEntity<>(rightAnswer,HttpStatus.OK);
     }
 }
